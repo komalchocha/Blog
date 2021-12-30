@@ -15,10 +15,10 @@ use Yajra\DataTables\Html\Editor\Fields\Select;
 
 class ProductController extends Controller
 {
+ 
     public function index(ProductDataTable $productdatatable)
     {
         $productcategories = Productcategory::all();
-
         return $productdatatable->render('admin.product.product_view', compact('productcategories'));
     }
     public function ProductStore(Request $request)
@@ -44,15 +44,18 @@ class ProductController extends Controller
         $productDelete = __('messages.Delete Successfully');
         return response()->json(['status' => true, 'message' => "$productDelete"]);
     }
-    public function Products()
+   
+    public function Products(Request $request)
     {
-
+    
+       
         $products = Product::all();
         $productcategory = Productcategory::all();
-
+    
         return view('admin.product.display_product', compact('products', 'productcategory'));
+        
     }
-    public function importView(Request $request)
+    public function importView()
     {
         return view('admin.product.product_view');
     }
@@ -73,4 +76,12 @@ class ProductController extends Controller
         $data = Product::where('category_id', $request->id)->select('image','category_id')->get();
         return response()->json(['status' => true, 'data' => $data]);
     }
+  
+    public function price(Request $request)
+{
+    $data = Product::where('price', [$request->input('min'), $request->input('max')])->select('image')->get();
+    
+    return response()->json(['status' => true, 'data' => $data]);
+}  
+  
 }

@@ -15,8 +15,7 @@ class Product extends Model
         'image',
         'category_id',
         'price',
-        'price_max',
-        'price_min'
+       
     ];
     protected $hidden=[
         'created_at',

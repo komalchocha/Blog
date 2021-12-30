@@ -8,8 +8,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                
-                <form id="product" action=""  method="POST" >
+
+                <form id="product" action="" method="POST">
                     @csrf
 
                     <div class="form-group">
@@ -17,7 +17,7 @@
                         <label>Product Title</label>
                         <input type="text" name="name" id="product_name" class="form-control" placeholder="Product Title" onKeypress="return(event.charCode>64 && event.charCode<91)||(event.charCode>96 &&(event.charCode<123)||(event.charCode==15))">
                     </div>
-                   
+
                     <div class="form-group">
                         <label class="d-block">Product Category</label>
                         <select name="categorie_name" id="categorie" class="form-control">
@@ -26,7 +26,6 @@
                             <option value="{{$productcategory->id}}">
                                 {{$productcategory->categories_name}}
                             </option>
-                            
                             @endforeach
                             </option>
                         </select>
@@ -36,10 +35,9 @@
                         <textarea name="description" id="blog_description" class="form-control" placeholder="Description"></textarea>
                     </div>
                     <div class="form-group">
-
-<label>Product Price</label>
-<input type="number" name="price" id="product_price" class="form-control" placeholder="Product Title">
-</div>
+                        <label>Product Price</label>
+                        <input type="number" name="price" id="product_price" class="form-control" placeholder="Product Price">
+                    </div>
                     <div class="form-group">
                         <div class="form-group">
                             <label class="d-block">Choose Product</label>
@@ -47,8 +45,7 @@
                         </div>
                     </div>
                     <div class="text-right mb-0">
-                
-                        <button type="submit"  class="btn btn-primary" value="submit" name="submit">submit</button>
+                        <button type="submit" class="btn btn-primary" value="submit" name="submit">submit</button>
                     </div>
                 </form>
             </div>
@@ -64,7 +61,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
 <script>
-    
     $('.close').click(function() {
         $('#product_add').find('form').trigger('reset');
         $("#product").find('.is-invalid').removeClass("is-invalid");
@@ -74,37 +70,36 @@
             name: {
                 required: true,
             },
-            categorie_name:{
+            categorie_name: {
                 required: true,
-            
             },
-            description:{
-                 required: true,
+            description: {
+                required: true,
             },
-            price:{
-                 required: true,
+            price: {
+                required: true,
             },
-            image:{
+            image: {
                 required: true,
             }
         },
         messages: {
             name: {
-                required:"Product title required",
+                required: "Product title required",
             },
 
             categorie_name: {
-                required:"Categorie required",
+                required: "Categorie required",
 
             },
-            description:{
-                required:"Description required",
+            description: {
+                required: "Description required",
             },
-            price:{
-                 required:"Price required",
+            price: {
+                required: "Price required",
             },
-            image:{
-                required:"Image required",
+            image: {
+                required: "Image required",
             }
         },
         submitHandler: function(form) {
@@ -134,8 +129,4 @@
         }
 
     });
-         
-
-   
-    
 </script>

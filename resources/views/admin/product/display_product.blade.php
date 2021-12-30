@@ -9,13 +9,11 @@
     <link href='https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css' rel='stylesheet'>
     <link href='https://use.fontawesome.com/releases/v5.8.1/css/all.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.css" integrity="sha512-qveKnGrvOChbSzAdtSs8p69eoLegyh+1hwOMbmpCViIwj7rn4oJjdmMvWOuyQlTOZgTlZA0N2PXA7iA8/2TUYA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="{{ asset('plugins/price/price.css') }}">
 
     <style></style>
     <script type='text/javascript' src=''></script>
     <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js'></script>
     <script type='text/javascript' src='https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js'></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.js" integrity="sha512-7i2V4phHspcYYpLujbQU0Ur1NjN6h0oWic1YVo8V1gLtBzOziltT3XX/5XaAmhbvtx3QjyANL/MIyuTpXh/Ndw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body oncontextmenu='return false' class='snippet-body'>
@@ -38,27 +36,13 @@
                         <label class="custom-control-label">{{($category->categories_name)}}</label>
                     </div></br>
                     @endforeach
-                    <fieldset class="filter-price">
-   
-    <div class="price-field">
-      <input type="range"  min="100" max="500" value="100" id="lower">
-      <input type="range" min="100" max="1000000" value="1000000" id="upper">
-    </div>
-     <div class="price-wrap">
-      <span class="price-title"></span>
-      <div class="price-wrap-1">
-        <input id="one">
-        <label for="one">$</label>
-      </div>
-      <div class="price-wrap_line">-</div>
-      <div class="price-wrap-2">
-        <input id="two">
-        <label for="two">$</label>
-      </div>
-    </div>
-  </fieldset> 
-                    <br />
-
+                    <div class="widget mercado-widget filter-widget price-filter">
+                        <h6 class="widget-title">Price<span class="text-info" id="price"></span></h6>
+                        <div class="widget-content" style="padding:10px 5px 40px 5px;">
+                            <div id="slider"  wire:ignore></div>
+                        </div>
+                    </div>
+                    <br/>
                     <h6 class="card-subtitle border-bottom mb-2">Shorting</h6>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="address_type" id="home" value="1" required>
@@ -109,6 +93,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js" integrity="sha512-ZKqmaRVpwWCw7S7mEjC89jDdWRD/oMS0mlfH96mO0u3wrPYoN+lXmqvyptH4P9mY6zkoPTSy5U2SwKVXRY5tYQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <script>
     $(document).on('click', '.category_chechbox', function() {
         $('.product').empty();
@@ -130,9 +116,6 @@
                 dataType: 'json',
 
                 success: function(data) {
-
-
-
                     var htm = "";
                     $.each(data.data, function(key, value) {
 
@@ -149,38 +132,34 @@
         }
     });
 
-    var lowerSlider = document.querySelector("#lower");
-var upperSlider = document.querySelector("#upper");
-
-document.querySelector("#two").value = upperSlider.value;
-document.querySelector("#one").value = lowerSlider.value;
-
-var lowerVal = parseInt(lowerSlider.value);
-var upperVal = parseInt(upperSlider.value);
-
-upperSlider.oninput = function () {
-  lowerVal = parseInt(lowerSlider.value);
-  upperVal = parseInt(upperSlider.value);
-
-  if (upperVal < lowerVal + 4) {
-    lowerSlider.value = upperVal - 4;
-    if (lowerVal == lowerSlider.min) {
-      upperSlider.value = 4;
-    }
-  }
-  document.querySelector("#two").value = this.value;
-};
-
-lowerSlider.oninput = function () {
-  lowerVal = parseInt(lowerSlider.value);
-  upperVal = parseInt(upperSlider.value);
-  if (lowerVal > upperVal - 4) {
-    upperSlider.value = lowerVal + 4;
-    if (upperVal == upperSlider.max) {
-      lowerSlider.value = parseInt(upperSlider.max) - 4;
-    }
-  }
-  document.querySelector("#one").value = this.value;
-};
-
+    var slider = document.getElementById('slider');
+    noUiSlider.create(slider, {
+        start: [1, 1000],
+        connect: true,
+        range: {
+            'min': 1,
+            'max': 1000
+        },
+        pips: {
+            mode: 'steps',
+            stepped: true,
+            density: 4
+        }
+    });
+    slider.noUiSlider.on('update',function(value){  
+        
+        $('#price').html(parseInt(value[0])+' - '+parseInt(value[1]));
+        var value1 = value[0];
+        var value2 = value[1];
+        $.ajax({ 
+        type: "GET",
+        url:'{{route("price")}}',
+        data: "min_price="+value1+"&max_price="+value2,
+        cache: false,
+        success: function(data){
+            console.log(data);
+        }
+      });
+    });
+  
 </script>

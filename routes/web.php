@@ -38,4 +38,5 @@ Route::post('destroyblog', [App\Http\Controllers\Blog\AddBlogController::class, 
 Route::get('language', [App\Http\Controllers\LanguageController::class, 'language'])->name('language');
 Route::get('welcome/products', [App\Http\Controllers\Admin\ProductController::class, 'Products'])->name('welcome/products');;
 Route::post('getCategory',[App\Http\Controllers\Admin\ProductController::class, 'getCategory'])->name('getCategory');
+Route::get('price',[App\Http\Controllers\Admin\ProductController::class, 'price'])->name('price');
 
