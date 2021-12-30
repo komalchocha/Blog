@@ -1,0 +1,28 @@
+ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.comments{
+    margin-top: 30px;
+}
+.comments ul li {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+.comments ul li:last-child {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    border-bottom: none;
+}
+
+.comments ul li .right-content {
+    margin-left: 10px;
+}
+.replied-box {
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    margin-left: 50px;
+    margin-top: 30px;
+}
