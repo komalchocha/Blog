@@ -11,6 +11,7 @@ use App\Models\Productcategory;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\Console\Input\Input;
 use Yajra\DataTables\Html\Editor\Fields\Select;
 
 class ProductController extends Controller
@@ -73,15 +74,24 @@ class ProductController extends Controller
    
     public function getCategory(Request $request)
     {
-        $data = Product::where('category_id', $request->id)->select('image','category_id')->get();
+        $min_price = $request->Input('min_price');
+        $max_price = $request->Input('max_price');
+        $data = Product::whereIn('category_id',$request->id)->select('image','category_id')->get();
+        
+     
+        if (($min_price) && ($max_price)) {
+            $data=product::whereBetween('price', [$min_price, $max_price])->select('image')->get();
+    
+        }
+        elseif (! is_null($min_price)) {
+           $data=product::where('price', '>=', $min_price)->select('image')->get();
+        }
+        elseif (! is_null($max_price)) {
+           $data=product::where('price', '<=', $max_price)->select('image')->get();
+        }
         return response()->json(['status' => true, 'data' => $data]);
     }
   
-    public function price(Request $request)
-{
-    $data = Product::where('price', [$request->input('min'), $request->input('max')])->select('image')->get();
-    
-    return response()->json(['status' => true, 'data' => $data]);
-}  
+   
   
 }

@@ -36,7 +36,10 @@
                         <label class="custom-control-label">{{($category->categories_name)}}</label>
                     </div></br>
                     @endforeach
+                    
                     <div class="widget mercado-widget filter-widget price-filter">
+                        <input type="hidden" id="min_price" name="min_price" value=1>      
+                        <input type="hidden" id="max_price" name="max_price" value=5000>                                        
                         <h6 class="widget-title">Price<span class="text-info" id="price"></span></h6>
                         <div class="widget-content" style="padding:10px 5px 40px 5px;">
                             <div id="slider"  wire:ignore></div>
@@ -53,13 +56,12 @@
                         <label class="form-check-label" for="office">Lowest price</label>
                     </div>
                     <div class="text-right mb-0">
-                        <button type="submit" href="{{route('getCategory')}}" class="btn btn-primary" value="submit" name="submit">Filter</button>
                     </div>
                 </div>
             </div>
             <div class="col-lg-9 col-md-12 col-sm-12 mb-30">
-                <div class="card rightSide h-100 mb-0">
-                    <div class="row m-0 causes_div"></div>
+                <div class="card rightSide h-100 mb-0 causes_div">
+                    <div class="row m-0 "></div>
                 </div>
             </div>
             <div class="row">
@@ -83,7 +85,6 @@
                 <!--Item two -->
                 @endforeach
                 <!-- Item Three -->
-
             </div>
         </div>
     </section>
@@ -98,47 +99,25 @@
 <script>
     $(document).on('click', '.category_chechbox', function() {
         $('.product').empty();
-        // var id = $(this).val();
-        var id = $(this).val();
-
-        if ($(this).prop('checked') == true) {
-
-
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                },
-                url: "{{route('getCategory')}}",
-                method: 'POST',
-                data: {
-                    id: id,
-                },
-                dataType: 'json',
-
-                success: function(data) {
-                    var htm = "";
-                    $.each(data.data, function(key, value) {
-
-                        htm += '<div class="img_thumb" id="' + value.category_id + '" ><div class="h-causeIMG"><img src="' + value.image + '" alt="" /></div></div>'
-
-                    });
-                    $('.causes_div').append(htm);
-                }
-            });
-        } else {
-            var id = $(this).val();
-            $('#' + id).html('');
-            $('#' + id).remove();
-        }
+        Filter();
+    
+        // if ($(this).prop('checked') == true) {
+      
+        // } else {
+        //     var id = $(this).val();
+        //     $('#' + id).html('');
+        //     $('#' + id).remove();
+        // }
     });
 
     var slider = document.getElementById('slider');
     noUiSlider.create(slider, {
-        start: [1, 1000],
+        start: [1, 50000],
         connect: true,
         range: {
             'min': 1,
-            'max': 1000
+            'max': 50000
+            
         },
         pips: {
             mode: 'steps',
@@ -147,19 +126,45 @@
         }
     });
     slider.noUiSlider.on('update',function(value){  
-        
         $('#price').html(parseInt(value[0])+' - '+parseInt(value[1]));
         var value1 = value[0];
         var value2 = value[1];
-        $.ajax({ 
-        type: "GET",
-        url:'{{route("price")}}',
-        data: "min_price="+value1+"&max_price="+value2,
-        cache: false,
-        success: function(data){
-            console.log(data);
-        }
-      });
+        $('#min_price').val(value1);
+        $('#max_price').val(value2);
+        Filter();
     });
-  
+
+    function  Filter(){
+        var id = [];
+                   $(".category_chechbox:checked").each(function() {
+                       id.push($(this).val());
+                   })
+        var min_price = $("#min_price" ).val();
+        var max_price = $("#max_price" ).val();
+
+        $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                url: "{{route('getCategory')}}",
+                method: 'POST',
+                data: {min_price:min_price,
+                    max_price:max_price,
+                    id: id,
+
+                },
+                dataType: 'json',
+
+                success: function(data) {
+                    console.log(data);
+                    var htm = "";
+                    $.each(data.data, function(key, value) {
+
+                        htm += '<div class="img_thumb" id="' + value.category_id + '" ><div class="h-causeIMG"><img src="' + value.image + '" alt="" /></div></div>'
+
+                    });
+                    $('.causes_div').html(htm);
+                }
+            });
+    }
 </script>

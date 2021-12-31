@@ -25,11 +25,9 @@
                             @foreach ($blogcategories as $blogcategorie)
                             <option value="{{$blogcategorie->id}}">
                                 {{$blogcategorie->categories_name}}
-                            </option>
-                            
+</option> 
                             @endforeach
                             </option>
-                            
                         </select>
                     </div>
                     <div class="form-group">
@@ -55,12 +53,10 @@
         </div>
     </div>
 </div>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
 <script>
-    
     $('.close').click(function() {
         $('#blog_modal').find('form').trigger('reset');
         $("#blog").find('.is-invalid').removeClass("is-invalid");

@@ -32,4 +32,11 @@ class UserRequest extends FormRequest
 
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'mobile_number' => 'mobile'
+        ]
+    }
 }

@@ -1,6 +1,5 @@
 @extends('user.user_layout.masterblog')
 
-@section('content')
 @push('css')
 <style>
     .red {
@@ -9,6 +8,8 @@
     }
 </style>
 @endpush
+@section('content')
+
 <section class="tm-section">
     <div class="container-fluid">
 
@@ -23,12 +24,12 @@
                     <div class="card-body">
                         <p class="card-text">{{$viewblog->description}}</p>
                         @if(Auth::check())
-                        <button class="btn like {{islike($viewblog->id) ? 'red':''}}" id="{{$viewblog->id}}">{{ $viewblog->like()->count() }}<i class="fa fa-heart-o"></i></button>
-                        <button class="btn comment">{{ $viewblog->comment()->count() }}<i class="fa fa-comment-o"></i></button><br />
-                        <div id="abc"></div>
+                            <button class="btn like {{islike($viewblog->id) ? 'red':''}}" id="{{$viewblog->id}}">{{ $viewblog->like()->count() }}<i class="fa fa-heart-o"></i></button>
+                            <button class="btn comment">{{ $viewblog->comment()->count() }}<i class="fa fa-comment-o"></i></button><br />
+                            <div id="abc"></div>
                         @else
-                        <a href="{{ route('login') }}" id="{{$viewblog->id}}"><i class="fa fa-heart-o"></i></a>
-                        <a href="{{ route('login') }}" id="{{$viewblog->id}}"><i class="fa fa-comment-o"></i></button><br /></a>
+                            <a href="{{ route('login') }}" id="{{$viewblog->id}}"><i class="fa fa-heart-o"></i></a>
+                            <a href="{{ route('login') }}" id="{{$viewblog->id}}"><i class="fa fa-comment-o"></i></button><br /></a>
                         @endif
                     </div>
                     @foreach($comments as $comment)
